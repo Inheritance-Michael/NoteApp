@@ -1,7 +1,7 @@
 package com.example.noteapp.domain.usecases
 
 import com.example.noteapp.domain.model.Note
-import com.example.noteapp.domain.repository.NoteRepository
+import com.example.noteapp.feature_note.data.repository.NoteRepository
 import com.example.noteapp.domain.util.NoteOrder
 import com.example.noteapp.domain.util.OrderType
 import kotlinx.coroutines.flow.Flow

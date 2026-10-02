@@ -1,4 +1,4 @@
-package com.example.noteapp.domain.repository
+package com.example.noteapp.feature_note.data.repository
 
 import com.example.noteapp.domain.model.Note
 import kotlinx.coroutines.flow.Flow

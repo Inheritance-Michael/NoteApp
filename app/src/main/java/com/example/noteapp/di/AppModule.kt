@@ -2,8 +2,8 @@ package com.example.noteapp.di
 
 import android.app.Application
 import androidx.room.Room
-import com.example.noteapp.domain.model.Note
-import com.example.noteapp.domain.repository.NoteRepository
+import com.example.noteapp.domain.usecases.AddNote
+import com.example.noteapp.feature_note.data.repository.NoteRepository
 import com.example.noteapp.domain.usecases.DeleteNotes
 import com.example.noteapp.domain.usecases.GetNotes
 import com.example.noteapp.domain.usecases.NoteUseCases
@@ -37,9 +37,10 @@ object AppModule {
     @Provides
     @Singleton
     fun provideNoteUsesCases(repository: NoteRepository): NoteUseCases{
-        return NoteUseCases(
-            getNotes = GetNotes(repository),
-            deleteNotes = DeleteNotes(repository)
-        )
+            return NoteUseCases(
+                getNotes = GetNotes(repository),
+                deleteNotes = DeleteNotes(repository),
+                addNote = AddNote(repository)
+            )
         }
     }
