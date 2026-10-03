@@ -1,4 +1,4 @@
-package com.example.noteapp.presentation.add_edit_note
+﻿package com.example.noteapp.presentation.add_edit_note
 
 
 import android.annotation.SuppressLint
@@ -67,7 +67,7 @@ fun AddEditScreen(
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
             when(event){
-                AddEditNoteViewModel.UIEvent.SavaNote -> {
+                is AddEditNoteViewModel.UIEvent.SaveNote -> {
                     navController.navigateUp()
                 }
                 is AddEditNoteViewModel.UIEvent.ShowSnackBar -> {

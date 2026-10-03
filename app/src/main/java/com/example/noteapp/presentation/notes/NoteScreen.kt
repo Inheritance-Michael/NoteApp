@@ -1,4 +1,4 @@
-package com.example.noteapp.presentation.notes
+﻿package com.example.noteapp.presentation.notes
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
@@ -117,8 +117,8 @@ fun NoteScreen(
                             viewModel.onEvent(NotesEvent.DeleteNote(note))
                             scope.launch {
                                 val result = snackBarHostState.showSnackbar(
-                                    message = "No",
-                                    actionLabel = "undo"
+                                    message = "Note deleted",
+                                    actionLabel = "Undo"
                                 )
                                 if (result == SnackbarResult.ActionPerformed){
                                     viewModel.onEvent(NotesEvent.RestoreNote)

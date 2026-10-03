@@ -1,7 +1,5 @@
-package com.example.noteapp.presentation.add_edit_note
+﻿package com.example.noteapp.presentation.add_edit_note
 
-
-import android.os.Message
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.toArgb
@@ -11,11 +9,9 @@ import androidx.lifecycle.viewModelScope
 import com.example.noteapp.domain.model.InvalidNoteException
 import com.example.noteapp.domain.model.Note
 import com.example.noteapp.domain.usecases.NoteUseCases
-import com.example.noteapp.domain.util.NoteOrder
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -41,12 +37,10 @@ class AddEditNoteViewModel @Inject constructor(
     private var currentNoteID: Int? = null
 
     init {
-        savedStateHandle.get<Int>("noteID")?.let{
-            noteID ->
-            if(noteID != -1){
+        (savedStateHandle.get<Int>("noteId") ?: savedStateHandle.get<Int>("noteID"))?.let { noteId ->
+            if (noteId != -1) {
                 viewModelScope.launch {
-                    noteUseCases.getNote(noteID)?.also {
-                        note ->
+                    noteUseCases.getNote(noteId)?.also { note ->
                         currentNoteID = note.id
                         _noteTitle.value = noteTitle.value.copy(
                             text = note.tittle,
@@ -56,19 +50,18 @@ class AddEditNoteViewModel @Inject constructor(
                             text = note.content,
                             isHintVisible = false
                         )
-                        _noteColor.value = noteColor.value
+                        _noteColor.value = note.color
                     }
                 }
             }
         }
     }
-    private val _eventFlow = MutableStateFlow<UIEvent>(
-        value = TODO()
-    )
+
+    private val _eventFlow = MutableSharedFlow<UIEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
-    fun onEvent(event: AddEditNoteEvent){
-        when(event){
+    fun onEvent(event: AddEditNoteEvent) {
+        when(event) {
             is AddEditNoteEvent.ChangeColor -> {
                 _noteColor.value = event.color
             }
@@ -104,11 +97,11 @@ class AddEditNoteViewModel @Inject constructor(
                                 id = currentNoteID
                             )
                         )
-                        _eventFlow.emit(UIEvent.SavaNote)
-                    }catch(e: InvalidNoteException) {
+                        _eventFlow.emit(UIEvent.SaveNote)
+                    } catch(e: InvalidNoteException) {
                         _eventFlow.emit(
                             UIEvent.ShowSnackBar(
-                                message = e.message ?: "Unknow Error"
+                                message = e.message ?: "Unknown Error"
                             )
                         )
                     }
@@ -117,8 +110,8 @@ class AddEditNoteViewModel @Inject constructor(
         }
     }
 
-    sealed class UIEvent{
+    sealed class UIEvent {
         data class ShowSnackBar(val message: String): UIEvent()
-        object SavaNote: UIEvent()
+        object SaveNote: UIEvent()
     }
 }
